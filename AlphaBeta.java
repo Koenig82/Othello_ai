@@ -1,8 +1,15 @@
 import java.util.LinkedList;
 
 public class AlphaBeta implements OthelloAlgorithm {
-    int depth = 4;
-    Evaluator evaluator = new Evaluator();
+    private int depth;
+    long timeLimit;
+    private Evaluator evaluator = new Evaluator();
+
+    public AlphaBeta(int depth, long timeLimit) {
+        this.depth = depth;
+        this.timeLimit = timeLimit;
+    }
+
     @Override
     public void setEvaluator(OthelloEvaluator evaluator) {
 
@@ -30,9 +37,12 @@ public class AlphaBeta implements OthelloAlgorithm {
             int value = Integer.MIN_VALUE;
             for (OthelloAction action : actions) {
                 try {
-                    //simulera moves från MAX
+                    //simulate moves from maximum node
                     OthelloPosition newMinState = position.makeMove(action);
                     value = Integer.max(value, maximum(newMinState, depth, alpha, beta));
+                    if(System.currentTimeMillis() > timeLimit){
+                        return new OthelloAction(9,9);
+                    }
                     alpha = Integer.max(alpha, value);
                     if(value > bestAction.getValue()){
                         bestAction = action;
@@ -48,16 +58,16 @@ public class AlphaBeta implements OthelloAlgorithm {
             int value = Integer.MAX_VALUE;
             for (OthelloAction action : actions) {
                 try {
-                    //simulera moves från MIN
+                    //simulate moves from minimum node
                     OthelloPosition newMinState = position.makeMove(action);
                     value = Integer.min(value, minimum(newMinState, depth, alpha, beta));
+                    if(System.currentTimeMillis() > timeLimit){
+                        return new OthelloAction(9,9);
+                    }
                     beta = Integer.min(beta, value);
                     if(value < bestAction.getValue()){
                         bestAction = action;
                         bestAction.setValue(value);
-                    }
-                    if(alpha >= beta){
-                        break;
                     }
                 } catch (IllegalMoveException e) {
                     e.printStackTrace();
@@ -65,25 +75,25 @@ public class AlphaBeta implements OthelloAlgorithm {
             }
             return bestAction;
         }
-
-
     }
 
-    public int maximum(OthelloPosition position,int depth, int alpha, int beta){
+    private int maximum(OthelloPosition position, int depth, int alpha, int beta){
         LinkedList<OthelloAction> actions = position.getMoves();
         if(depth == 0){
             return evaluator.evaluate(position);
         }else if( actions.isEmpty()){
-            return 5000;
+            return evaluator.evaluate(position);
         }
 
         int value = Integer.MAX_VALUE;
-        //depth--;
         for (OthelloAction action : actions) {
             try {
-                //simulera moves från MIN
+                //simulate moves from minimum node
                 OthelloPosition newMinState = position.makeMove(action);
                 value = Integer.min(value, minimum(newMinState, depth-1, alpha, beta));
+                if(System.currentTimeMillis() > timeLimit){
+                    return 0;
+                }
                 beta = Integer.min(beta, value);
                 if(alpha >= beta){
                     break;
@@ -93,25 +103,25 @@ public class AlphaBeta implements OthelloAlgorithm {
             }
         }
         return value;
-
-
     }
 
-    public int minimum(OthelloPosition position,int depth, int alpha, int beta){
+    private int minimum(OthelloPosition position, int depth, int alpha, int beta){
         LinkedList<OthelloAction> actions = position.getMoves();
         if(depth == 0){
             return evaluator.evaluate(position);
         }else if( actions.isEmpty()){
-            return -5000;
+            return evaluator.evaluate(position);
         }
 
         int value = Integer.MIN_VALUE;
-        //depth--;
         for (OthelloAction action : actions) {
             try {
-                //simulera moves från MAX
+                //simulate moves from maximum node
                 OthelloPosition newMinState = position.makeMove(action);
                 value = Integer.max(value, maximum(newMinState, depth-1, alpha, beta));
+                if(System.currentTimeMillis() > timeLimit){
+                    return 0;
+                }
                 alpha = Integer.max(alpha, value);
                 if(alpha >= beta){
                     break;
@@ -121,13 +131,10 @@ public class AlphaBeta implements OthelloAlgorithm {
             }
         }
         return value;
-
     }
-
 
     @Override
     public void setSearchDepth(int depth) {
         this.depth = depth;
     }
-
 }
