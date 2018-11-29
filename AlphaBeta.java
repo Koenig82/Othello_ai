@@ -1,11 +1,13 @@
 import java.util.LinkedList;
 
 public class AlphaBeta implements OthelloAlgorithm {
+
     private int depth;
     long timeLimit;
     private Evaluator evaluator = new Evaluator();
 
     public AlphaBeta(int depth, long timeLimit) {
+
         this.depth = depth;
         this.timeLimit = timeLimit;
     }
@@ -78,10 +80,10 @@ public class AlphaBeta implements OthelloAlgorithm {
     }
 
     private int maximum(OthelloPosition position, int depth, int alpha, int beta){
+
         LinkedList<OthelloAction> actions = position.getMoves();
-        if(depth == 0){
-            return evaluator.evaluate(position);
-        }else if( actions.isEmpty()){
+
+        if(depth == 0 || actions.isEmpty()){
             return evaluator.evaluate(position);
         }
 
@@ -106,10 +108,10 @@ public class AlphaBeta implements OthelloAlgorithm {
     }
 
     private int minimum(OthelloPosition position, int depth, int alpha, int beta){
+
         LinkedList<OthelloAction> actions = position.getMoves();
-        if(depth == 0){
-            return evaluator.evaluate(position);
-        }else if( actions.isEmpty()){
+
+        if(depth == 0 || actions.isEmpty()){
             return evaluator.evaluate(position);
         }
 

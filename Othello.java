@@ -2,8 +2,16 @@ public class Othello {
 
     public static void main(String[] argv){
 
-        long timeLimit = System.currentTimeMillis() + ((long) Integer.parseInt(argv[1])) * 1000 - 100;;
-        OthelloPosition pos = new OthelloPosition(argv[0]);;
+        if(argv.length != 2){
+            System.err.println("Program should have 2 arguments. Position string and a time limit");
+            return;
+        }else if(argv[0].length() != 65){
+            System.err.println("The position string has an invalid length");
+            return;
+        }
+
+        long timeLimit = System.currentTimeMillis() + ((long) Integer.parseInt(argv[1])) * 1000 - 100;
+        OthelloPosition pos = new OthelloPosition(argv[0]);
 
         int depth = 0;
         AlphaBeta alphaBeta = new AlphaBeta(depth, timeLimit);

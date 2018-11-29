@@ -326,6 +326,9 @@ public class OthelloPosition {
      */
     public OthelloPosition makeMove(OthelloAction action) throws IllegalMoveException {
 
+        if(!isMove(action.row,action.column)){
+            throw new IllegalMoveException(action);
+        }
         char player = toMove() ? 'W' : 'B';
 
         OthelloPosition newBoard = this.clone();
@@ -402,10 +405,6 @@ public class OthelloPosition {
                 col--;
             }
         }
-
-        /*
-         * TODO: write the code for this method and whatever helper functions it needs.
-         */
         newBoard.playerToMove = !toMove();
         return newBoard;
     }
