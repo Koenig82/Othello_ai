@@ -1,5 +1,22 @@
+/**
+ * This class implements OthelloEvaluator interface and
+ * is used to determine utility value for agents when a
+ * leaf node is reached in the alpha beta algorithm.
+ * The evaluation considers how much moves are available
+ * to the agents and prioritizes positioning along
+ * the edges of the board
+ *
+ * @author Niklas Königsson, dv15nkn
+ */
 public class Evaluator implements OthelloEvaluator {
 
+    /**
+     * Evaluates a game state utility by determining
+     * the position and mobility values.
+     *
+     * @param position OthelloPosition, The game state
+     * @return Integer, Utility value
+     */
     @Override
     public int evaluate(OthelloPosition position) {
 
@@ -10,6 +27,13 @@ public class Evaluator implements OthelloEvaluator {
 
     }
 
+    /**
+     * Helper method used by evaluate to determine the
+     * positioning score
+     *
+     * @param position OthelloPosition, The game state
+     * @return Integer, Utility value of the coin positions
+     */
     private int getCoinValue(OthelloPosition position) {
         int whiteCoins = 0;
         int blackCoins = 0;
@@ -27,6 +51,15 @@ public class Evaluator implements OthelloEvaluator {
         return whiteCoins-blackCoins;
     }
 
+    /**
+     * Helper method for getCoinValue. adds additional utility
+     * for edges and corners to the coin score.
+     *
+     * @param counter Integer, The current coin score
+     * @param i Integer, The column value where a coin was found.
+     * @param j Integer, The row value where a coin was found
+     * @return Integer, The coin value with added edge bonus
+     */
     private int addEdgeScore(int counter, int i, int j) {
         if((i == 1 || i == 8) && (j == 1 || j == 8)){
             counter += 50;
@@ -40,6 +73,13 @@ public class Evaluator implements OthelloEvaluator {
         return counter;
     }
 
+    /**
+     * Helper method for evaluate. Adds together the available
+     * moves for both players and returns the difference.
+     *
+     * @param position OthelloPosition, the game state
+     * @return Integer, Mobility value
+     */
     private int getMobilityValue(OthelloPosition position) {
         int whiteMobility;
         int blackMobility;

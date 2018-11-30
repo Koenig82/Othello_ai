@@ -1,22 +1,56 @@
 import java.util.LinkedList;
 
+/**
+ * This class implements the interface OthelloAlgorithm and
+ * and uses the minimax algorithm whith alpha-beta pruning
+ * to determine the best OthelloAction to be taken from
+ * an OthelloPosition.
+ *
+ * @author Niklas Königsson, dv15nkn
+ */
+
 public class AlphaBeta implements OthelloAlgorithm {
 
     private int depth;
     long timeLimit;
-    private Evaluator evaluator = new Evaluator();
+    private OthelloEvaluator evaluator = new Evaluator();
 
+    /**
+     * Constructor for the algorithm
+     *
+     * @param depth int, how deep to search for actions
+     * @param timeLimit long, The time in milliseconds when
+     *                  the algorithm should terminate.
+     */
     public AlphaBeta(int depth, long timeLimit) {
 
         this.depth = depth;
         this.timeLimit = timeLimit;
     }
 
+    /**
+     * Used to change the heuristic evaluator used
+     *
+     * @param evaluator OthelloEvaluator. heuristic evaluator
+     */
     @Override
     public void setEvaluator(OthelloEvaluator evaluator) {
-
+        this.evaluator = evaluator;
     }
 
+    /**
+     * This method is called from a position. it is the start
+     * of the minimax algorithm and can go to one of two mirrored
+     * ways depending on if the state is a maximizing or
+     * minimizing node. The two paths calls minimize or maximize
+     * that returns a value of the paths that can be used to
+     * determine if it is the best action considering future
+     * moves.
+     *
+     * @param position OthelloPosition, the game state
+     * @return OthelloAction, The best action the algorithm
+     *         the algorithm can determine.
+     */
     @Override
     public OthelloAction evaluate(OthelloPosition position){
 
@@ -79,6 +113,18 @@ public class AlphaBeta implements OthelloAlgorithm {
         }
     }
 
+    /**
+     * maximum is called from a maximizing node that seeks to
+     * determine the maximum value of its child nodes. The
+     * actions in this method will be minimizing nodes that call
+     * minimize to seek the lowest value of their children nodes.
+     *
+     * @param position OthelloPosition, game state
+     * @param depth, Integer, The current search depth
+     * @param alpha, Integer, Alpha value of the parent node.
+     * @param beta,  Integer, Beta value of the parent node.
+     * @return Integer, The heuristic evaluation of this path
+     */
     private int maximum(OthelloPosition position, int depth, int alpha, int beta){
 
         LinkedList<OthelloAction> actions = position.getMoves();
@@ -107,6 +153,18 @@ public class AlphaBeta implements OthelloAlgorithm {
         return value;
     }
 
+    /**
+     * minimum is called from a minimizing node that seeks to
+     * determine the minimum value of its child nodes. The
+     * actions in this method will be maximizing nodes that call
+     * maximize to seek the highest value of their children nodes.
+     *
+     * @param position OthelloPosition, game state
+     * @param depth, Integer, The current search depth
+     * @param alpha, Integer, Alpha value of the parent node.
+     * @param beta,  Integer, Beta value of the parent node.
+     * @return Integer, The heuristic evaluation of this path
+     */
     private int minimum(OthelloPosition position, int depth, int alpha, int beta){
 
         LinkedList<OthelloAction> actions = position.getMoves();
@@ -135,6 +193,11 @@ public class AlphaBeta implements OthelloAlgorithm {
         return value;
     }
 
+    /**
+     * Sets the search depth of the algorithm
+     *
+     * @param depth Integer, search depth
+     */
     @Override
     public void setSearchDepth(int depth) {
         this.depth = depth;

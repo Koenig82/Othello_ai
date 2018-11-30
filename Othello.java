@@ -1,5 +1,19 @@
+/**
+ * This is the main class of the othello algorithm. It can
+ * be compiled and run with an accompanying othello.sh script.
+ * This script is used as an argument in othellostart script
+ * as one of the players in the othello game it starts.
+ *
+ * @author Niklas Königsson, dv15nkn
+ */
 public class Othello {
 
+    /**
+     * Main method. it takes 2 arguments. a game state and
+     * a time limit.
+     *
+     * @param argv String[], The string vector of arguments
+     */
     public static void main(String[] argv){
 
         if(argv.length != 2){
